@@ -1,60 +1,85 @@
-import math
 import random
-
-c1=1.0/math.factorial(3)
-c2=1.0/math.factorial(5)
-c3=1.0/math.factorial(7)
-c4=1.0/math.factorial(9)
-c5=1.0/math.factorial(11)
-c6=1.0/math.factorial(13)
-
-random_no=list()
-
-error1=list()
-error2=list()
-error3=list()
-error4=list()
-error5=list()
-error6=list()
+import math
+import time
 
 
-for iterator in range(0,10000):
-    random_no.append(random.uniform(-math.pi/2,math.pi/2))
-    x=random_no[iterator]
+def ex3():
+    fact = 2 * 3
+    c1 = 1.0 / fact
+    fact *= 4 * 5
+    c2 = 1.0 / fact
+    fact *= 6 * 7
+    c3 = 1.0 / fact
+    fact *= 8 * 9
+    c4 = 1.0 / fact
+    fact *= 10 * 11
+    c5 = 1.0 / fact
+    fact *= 12 * 13
+    c6 = 1.0 / fact
 
-    y=pow(x,2)
-    p1=x-c1*pow(x,3)+c2*pow(x,5)
-    p2=p1-c3*pow(x,7)
-    p3=p2+c4*pow(x,9)
-    p4=x-0.166*pow(x,3)+0.00833*pow(x,5)-c3*pow(x,7)+c4*pow(x,9)
-    p5=p4-c5*pow(x,11)
-    p6=p5+c6*pow(x,13)
+    # suma erorilor pt fiecare polinom
+    s1, s2, s3, s4, s5, s6 = 0, 0, 0, 0, 0, 0
+    # timpul de calcul pt fiecare polinom
+    t1, t2, t3, t4, t5, t6 = 0, 0, 0, 0, 0, 0
+    for i in range(10000):
+        x = random.uniform(-math.pi, math.pi)
+        y = x * x
 
-    error1.append(abs(p1-math.sin(x)))
-    error2.append(abs(p2-math.sin(x)))
-    error3.append(abs(p3-math.sin(x)))
-    error4.append(abs(p4-math.sin(x)))
-    error5.append(abs(p5-math.sin(x)))
-    error6.append(abs(p6-math.sin(x)))
+        t = time.time()
+        p1 = x * (1 + y * (-c1 + y * c2))
+        t1 += time.time() - t
+        # se adauga la suma diferenta in modul dintre functia sinus si valoarea polinomului
+        s1 += (abs(p1 - math.sin(x)))
 
-media1=0
-media2=0
-media4=0
-media3=0
-media5=0
-media6=0
+        t = time.time()
+        p2 = x * (1 + y * (-c1 + y * (c2 - y * c3)))
+        t2 += time.time() - t
+        s2 += (abs(p2 - math.sin(x)))
 
-for iterator in range(0,10000):
-    media1=(media1+error1[iterator])/2
-    media2=(media1+error2[iterator])/2
-    media3=(media1+error3[iterator])/2
-    media4=(media1+error4[iterator])/2
-    media5=(media1+error5[iterator])/2
-    media6=(media1+error6[iterator])/2
+        t = time.time()
+        p3 = x * (1 + y * (-c1 + y * (c2 + y * (-c3 + y * c4))))
+        t3 += time.time() - t
+        s3 += (abs(p3 - math.sin(x)))
 
-print(media1,media2,media3,media4,media5,media6)
-print(min(media1,media2,media3,media4,media5,media6))
+        t = time.time()
+        p4 = x * (1 + y * (-0.166 + y * (0.00833 + y * (-c3 + y * c4))))
+        t4 += time.time() - t
+        s4 += (abs(p4 - math.sin(x)))
+
+        t = time.time()
+        p5 = x * (1 + y * (-c1 + y * (c2 + y * (-c3 + y * (c4 - y * c5)))))
+        t5 += time.time() - t
+        s5 += (abs(p5 - math.sin(x)))
+
+        t = time.time()
+        p6 = x * (1 + y * (-c1 + y * (c2 + y * (-c3 + y * (c4 + y * (-c5 + c6))))))
+        t6 += time.time() - t
+        s6 += (abs(p6 - math.sin(x)))
+
+    a = {"Polimonul 1": s1, "Polimonul 2": s2, "Polimonul 3": s3, "Polimonul 4": s4, "Polimonul 5": s5,
+         "Polimonul 6": s6}
+    a = sorted(a.items(), key=lambda elem: elem[1])
+
+    j = 0
+    print("Primele 3 polinoame cu cele mai mici erori")
+    for i in a:
+        if j < 3:
+            print(i)
+            j += 1
+        else:
+            break
+
+    print("\nIerarhia celor 6 polinoame:")
+    for i in a:
+        print(i[0])
+
+    print("\nTimpul de calcul pt fiecare polinom: ")
+    print("t1:", t1)
+    print("t2:", t2)
+    print("t3:", t3)
+    print("t4:", t4)
+    print("t5:", t5)
+    print("t6:", t6)
 
 
-    #p1=x*(1-c1*y+c2*pow(y,2))
-    #p2=x*(1+y*(-c1+y*(c2-c3*y)))
+ex3()
