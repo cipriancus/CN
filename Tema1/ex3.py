@@ -1,8 +1,25 @@
 import random
 import math
 import time
+from ex2 import ex2
+from ex1 import ex1
+from flask import request
+from flask import Flask, jsonify
+import urllib
+import json
+
+app = Flask(__name__)
+
+@app.route('/exercitiul1')
+def call1():
+    return str(ex1())
+
+@app.route('/exercitiul2')
+def call2():
+    return ex2()
 
 
+@app.route('/exercitiul3')
 def ex3():
     fact = 2 * 3
     c1 = 1.0 / fact
@@ -60,26 +77,32 @@ def ex3():
          "Polimonul 6": s6}
     a = sorted(a.items(), key=lambda elem: elem[1])
 
+    afisare=str()
+
     j = 0
-    print("Primele 3 polinoame cu cele mai mici erori")
+    afisare=afisare + "Primele 3 polinoame cu cele mai mici erori "
     for i in a:
         if j < 3:
-            print(i)
+            afisare=afisare+' '+str(i)
             j += 1
         else:
             break
 
-    print("\nIerarhia celor 6 polinoame:")
+    afisare=afisare+'<br>'+"Ierarhia celor 6 polinoame:"
+
     for i in a:
-        print(i[0])
+        afisare=afisare+' '+i[0]
 
-    print("\nTimpul de calcul pt fiecare polinom: ")
-    print("t1:", t1)
-    print("t2:", t2)
-    print("t3:", t3)
-    print("t4:", t4)
-    print("t5:", t5)
-    print("t6:", t6)
+    afisare=afisare+'<br>'+"Timpul de calcul pt fiecare polinom: "
 
+    afisare=afisare+"t1:"+str(t1)+' '
+    afisare=afisare+"t2:"+str(t2)+' '
+    afisare=afisare+"t3:"+str(t3)+' '
+    afisare=afisare+"t4:"+str(t4)+' '
+    afisare=afisare+"t5:"+str(t5)+' '
+    afisare=afisare+"t6:"+str(t6)+' '
 
-ex3()
+    return afisare
+
+if __name__ == '__main__':
+    app.run(threaded=True)
