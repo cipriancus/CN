@@ -15,5 +15,5 @@ def ex2():
         x = random.uniform(0, 1.0)
         y = random.uniform(0, 1.0)
         z = random.uniform(0, 1.0)
-    string_ret=string_ret+' Valori pt care inmultirea nu este asociativa: '+str(x)+' '+str(y)+' '+str(z)
+    string_ret=string_ret+'<br> Valori pentru care inmultirea nu este asociativa: '+'<br>'+str(x)+' '+str(y)+' '+str(z)
     return string_ret

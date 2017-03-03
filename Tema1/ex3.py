@@ -104,10 +104,10 @@ def ex3():
     afisare=str()
 
     j = 0
-    afisare=afisare + "Primele 3 polinoame cu cele mai mici erori "
+    afisare=afisare + "Primele 3 polinoame cu cele mai mici erori :"
     for i in a:
         if j < 3:
-            afisare=afisare+' '+str(i)
+            afisare=afisare+'<br>'+str(i)+'<br>'
             j += 1
         else:
             break
@@ -115,7 +115,16 @@ def ex3():
     afisare=afisare+'<br>'+"Ierarhia celor 6 polinoame:"
 
     for i in a:
-        afisare=afisare+' '+i[0]
+        afisare=afisare+'<br>'+i[0]
+
+    afisare = afisare + '<br><br>' + "Timpul de calcul pt fiecare polinom neeficientizat: <br>"
+
+    afisare = afisare + "t1:" + str(tt1) + ' <br>'
+    afisare = afisare + "t2:" + str(tt2) + ' <br>'
+    afisare = afisare + "t3:" + str(tt3) + ' <br>'
+    afisare = afisare + "t4:" + str(tt4) + ' <br>'
+    afisare = afisare + "t5:" + str(tt5) + ' <br>'
+    afisare = afisare + "t6:" + str(tt6) + ' <br>'
 
     afisare=afisare+'<br>'+"Timpul de calcul pt fiecare polinom eficientizat: <br>"
 
@@ -126,14 +135,7 @@ def ex3():
     afisare=afisare+"t5:"+str(t5)+' <br>'
     afisare=afisare+"t6:"+str(t6)+' <br>'
 
-    afisare = afisare + '<br>' + "Timpul de calcul pt fiecare polinom neeficientizat: <br>"
 
-    afisare=afisare+"t1:"+str(tt1)+' <br>'
-    afisare=afisare+"t2:"+str(tt2)+' <br>'
-    afisare=afisare+"t3:"+str(tt3)+' <br>'
-    afisare=afisare+"t4:"+str(tt4)+' <br>'
-    afisare=afisare+"t5:"+str(tt5)+' <br>'
-    afisare=afisare+"t6:"+str(tt6)+' <br>'
 
     return afisare
 
