@@ -1,17 +1,51 @@
-from itertools import count
 import copy
+import numpy
 
-a = [[1, -1, 2],
-     [-1, 5, -4],
-     [2, -4, 6]]
+#returns matrix of order n inside a bigger matrix
+def det_of_order(a,n):
+    b=[[0 for x in range(n)] for y in range(n)]
+    for iterator in range(0,n):
+        for iterator2 in range(0, n):
+            b[iterator][iterator2]=a[iterator][iterator2]
+    return b
+
+# a = [[1, -1, 2],[-1, 5, -4],[2, -4, 6]]
+# b = [1, 0, 1]
+# d = [0, 0, 0]
+# n = 3
+
+n=int(input('insert n dimension'))
+a=[[0 for x in range(n)] for y in range(n)]
+
+for iterator in range(0,n):
+    for iterator2 in range(0,n):
+        a[iterator][iterator2]=int(input())
+
+print('input vector b:')
+b=[0 for x in range(n)]
+for iterator in range(0,n):
+    b[iterator]=int(input())
+
+print('input vector d:')
+d=[0 for x in range(n)]
+for iterator in range(0,n):
+    d[iterator]=int(input())
+
+#verificam simetria
+for iterator in range(0,n):
+    for iterator2 in range(0,iterator-1):
+        if a[iterator][iterator2] != a[iterator2][iterator]:
+            print('matricea nu este simetrica')
+            exit(0)
+
+#verificam deterinantii sa fie pozitivi
+for iterator in range(1,n+1):
+    if numpy.linalg.det(det_of_order(a,iterator))<0:
+        print('matricea nu este pozitiva')
+        exit(0)
 
 copyOfA=copy.deepcopy(a)
 
-b = [1, 0, 1]
-
-d = [0, 0, 0]
-
-n = 3
 
 eps = 10 ** -10
 
@@ -70,16 +104,7 @@ for i in range(n - 1, -1, -1):
 
 print("x Chol este:", x)
 
-# verificat matricea sa fie sim si poz(nu stiu exact daca e necesar)
-# aceleasi calcule folosind o biblioteca
-# verificarea solutiei prin calcularea normei
-
-# citit de la tastatuta conform problemei
-#   (mai bine sa o faci la sfarsit ca sa nu trebuiasca sa tot
-#    introduci date cand testezi)
-
 #-----------------------LDLT cu numpy----------------------------------
-import numpy
 print('-------------------------LIBRARIA------------------------')
 
 A=numpy.array(copyOfA)
