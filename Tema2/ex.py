@@ -1,51 +1,50 @@
 import copy
 import numpy
 
-#returns matrix of order n inside a bigger matrix
-def det_of_order(a,n):
-    b=[[0 for x in range(n)] for y in range(n)]
-    for iterator in range(0,n):
+
+# returns matrix of order n inside a bigger matrix
+def det_of_order(a, n):
+    b = [[0 for x in range(n)] for y in range(n)]
+    for iterator in range(0, n):
         for iterator2 in range(0, n):
-            b[iterator][iterator2]=a[iterator][iterator2]
+            b[iterator][iterator2] = a[iterator][iterator2]
     return b
+
 
 # a = [[1, -1, 2],[-1, 5, -4],[2, -4, 6]]
 # b = [1, 0, 1]
 # d = [0, 0, 0]
 # n = 3
 
-n=int(input('insert n dimension'))
-a=[[0 for x in range(n)] for y in range(n)]
+n = int(input('insert n dimension'))
+a = [[0 for x in range(n)] for y in range(n)]
 
-for iterator in range(0,n):
-    for iterator2 in range(0,n):
-        a[iterator][iterator2]=int(input())
+print('Dati elementele matricii:')
+for iterator in range(0, n):
+    for iterator2 in range(0, n):
+        a[iterator][iterator2] = float(input())
 
 print('input vector b:')
-b=[0 for x in range(n)]
-for iterator in range(0,n):
-    b[iterator]=int(input())
+b = [0 for x in range(n)]
+for iterator in range(0, n):
+    b[iterator] = float(input())
 
-print('input vector d:')
-d=[0 for x in range(n)]
-for iterator in range(0,n):
-    d[iterator]=int(input())
+d = [0 for x in range(n)]
 
-#verificam simetria
-for iterator in range(0,n):
-    for iterator2 in range(0,iterator-1):
+# verificam simetria
+for iterator in range(0, n):
+    for iterator2 in range(0, n):
         if a[iterator][iterator2] != a[iterator2][iterator]:
             print('matricea nu este simetrica')
             exit(0)
 
-#verificam deterinantii sa fie pozitivi
-for iterator in range(1,n+1):
-    if numpy.linalg.det(det_of_order(a,iterator))<0:
+# verificam deterinantii sa fie pozitivi
+for iterator in range(1, n + 1):
+    if numpy.linalg.det(det_of_order(a, iterator)) < 0:
         print('matricea nu este pozitiva')
         exit(0)
 
-copyOfA=copy.deepcopy(a)
-
+copyOfA = copy.deepcopy(a)
 
 eps = 10 ** -10
 
@@ -82,7 +81,7 @@ y = [None] * n
 for i in range(n):
     y[i] = b[i]
     for j in range(i):
-        if (i > 0):
+        if i > 0:
             y[i] -= a[i][j] * y[j]
 
 # z = Lt x din Dz = y
@@ -104,37 +103,37 @@ for i in range(n - 1, -1, -1):
 
 print("x Chol este:", x)
 
-#-----------------------LDLT cu numpy----------------------------------
+# -----------------------LDLT cu numpy----------------------------------
 print('-------------------------LIBRARIA------------------------')
 
-A=numpy.array(copyOfA)
-L=numpy.linalg.cholesky(A)#descompunerea LLT
+A = numpy.array(copyOfA)
+L = numpy.linalg.cholesky(A)  # descompunerea LLT
 
-#Pentru a forma LDLT din LLT
-#folosim un S care are diagonala din L
+# Pentru a forma LDLT din LLT
+# folosim un S care are diagonala din L
 
-S=numpy.zeros((n,n))
+S = numpy.zeros((n, n))
 
-for i in range(0,n):#parcurgem diag L
-    S[i][i]=L[i][i]
+for i in range(0, n):  # parcurgem diag L
+    S[i][i] = L[i][i]
 
-D=numpy.dot(S,S)#D=S^2
-L=numpy.dot(L,numpy.linalg.inv(S))#L=L*S^-1
+D = numpy.dot(S, S)  # D=S^2
+L = numpy.dot(L, numpy.linalg.inv(S))  # L=L*S^-1
 
-print('D este',D)
-print('L este',L)
-print('Inmultirea da ',numpy.dot(numpy.dot(L,D),L.T.conj()))
+print('D este', D)
+print('L este', L)
+print('Inmultirea da ', numpy.dot(numpy.dot(L, D), L.T.conj()))
 
-#----------------------DESCOMPUNEREA LU-----------------------
+# ----------------------DESCOMPUNEREA LU-----------------------
 
-A=numpy.array(copyOfA)
-L=numpy.linalg.cholesky(A)
-print('Descompunerea LU cu L: ',L)#descompunerea LU, daca A e sim si poz definita
+A = numpy.array(copyOfA)
+L = numpy.linalg.cholesky(A)
+print('Descompunerea LU cu L: ', L)  # descompunerea LU, daca A e sim si poz definita
 
-#-------------------------Solutia sistemului -----------------
-x=numpy.linalg.solve(A,b)
-print('Solutia librariei pentru sistem este: ',x)
+# -------------------------Solutia sistemului -----------------
+x = numpy.linalg.solve(A, b)
+print('Solutia librariei pentru sistem este: ', x)
 
-#-------------------------Norma-------------------------------
-A=numpy.subtract(numpy.dot(A,x),b)#A*x-b
-print('Norma este: ',numpy.linalg.norm(A,ord=2))#calc norma 2, sqrt(sum(abs(xi)^2))
+# -------------------------Norma-------------------------------
+A = numpy.subtract(numpy.dot(A, x), b)  # A*x-b
+print('Norma este: ', numpy.linalg.norm(A, ord=2))  # calc norma 2, sqrt(sum(abs(xi)^2))
