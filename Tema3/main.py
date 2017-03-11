@@ -1,3 +1,5 @@
+from pip._vendor import colorama
+
 epsilon = 10 ** -15
 
 
@@ -9,7 +11,6 @@ def memorare_economica(nume_fis):
     val = [0.0 for i in range(n + 1)]
     col = [-i - 1 for i in range(n + 1)]
     b = list()
-    count = 0
     ok = 0
     for line in open(nume_fis):
         if "," in line:
@@ -118,6 +119,45 @@ def aorix(d, val, col, b, name):
         iterator -= 1
     print("\tCalculul pt " + name + "*x este corect:", identical)
 
+def aorib(d_a, val_a, col_a,d_b,val_b,col_b,a_ori_b):
+    print("\nSe calculeaza A*B si se verifica daca rezultatul\neste identic cu cel din fisier:")
+    identical = True
+
+    d = [0.0 for i in range(n_a + 1)]
+    val = [0.0 for i in range(n_a + 1)]
+    col = [-i - 1 for i in range(n_a + 1)]
+
+    coloana= 1
+    while coloana <n_a:
+        linie = -1
+        while -linie < n_a:
+            lista_val_a = list()
+            lista_col_a = list()
+
+            line_a = col_a[col_a.index(linie) + 1:col_a.index(linie - 1)]
+
+            for i in range(0, len(line_a)):
+                lista_val_a.append(val_a[col_a.index(linie) + 1 + i])
+                lista_col_a.append(line_a[i])
+
+            for iterator in lista_col_a:
+                iterator=int(-iterator)
+                lista_val_b = list()
+                lista_col_b = list()
+
+                line_b= col_b[col_b.index(iterator)+1:col_b.index(iterator - 1)]
+
+                for i in range(0, len(line_b)):
+                    lista_val_b.append(val_b[col_b.index(iterator) + 1 + i])#iau toate liniile ce au numarul ca si coloana din A
+                    lista_col_b.append(line_b[i])
+
+                if len(lista_val_b)!=0 and coloana in lista_col_b:#inseamna ca avem elemente cu ce inmulti
+                    a=2
+
+
+            linie=linie-1
+        coloana=coloana+1
+
 
 # decomenteaza pt a calcula
 # o fi ea memorare economica de spatiu, dar nu e economica de timp
@@ -127,6 +167,7 @@ def aorix(d, val, col, b, name):
 # memorare_economica("aorib.txt")
 # memorare_economica("aplusb.txt")
 
-a_plus_b()
-aorix(d_a, val_a, col_a, b_a, "A")
-aorix(d_b, val_b, col_b, b_b, "B")
+#a_plus_b()
+#aorix(d_a, val_a, col_a, b_a, "A")
+#aorix(d_b, val_b, col_b, b_b, "B")
+aorib(d_a,val_a,col_a,d_b,val_b,col_b,b_aorib)
