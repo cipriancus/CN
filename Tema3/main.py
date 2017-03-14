@@ -109,6 +109,16 @@ def a_plus_b():
     return d, val, col
 
 
+def verify_10_elem(col, n):
+    iterator = -1
+    while -iterator < n:
+        if len(col[col.index(iterator) + 1:col.index(iterator - 1)]) > 10:
+            print("S-au gasit mai mult de 10 elem pe linie.")
+            return
+        iterator -= 1
+    print("Toate liniile au mai putin de 10 elemente.")
+
+
 def aorix(d, val, col, b, name):
     print("\nSe calculeaza " + name + "*x si se verifica daca rezultatul\neste identic cu cel din fisier:")
     iterator = -1
@@ -171,7 +181,7 @@ col_b_t = [-1, 5.0, 2.0, -2, 4.0, -3, 1.0, 2.0, -4, 5.0, -5, 2.0, -6]
 n_aorib = 5
 d_aorib = [25, 16, 49, 81, 144]
 val_aorib = [0.0, 24, 0.0, 87, 17, 66, 96, 0.0, 0.0, 24, 104, 8, 48, 0.0, 170, 88, 20, 231, 0.0]
-col_aorib = [-1, 3, -2, 1, 3, 4, 5 - 3, -4, 1, 2, 3, 5, -5, 1, 2, 3, 4, -1]
+col_aorib = [-1, 3, -2, 1, 3, 4, 5, -3, -4, 1, 2, 3, 5, -5, 1, 2, 3, 4, -6]
 
 
 def aorib():
@@ -185,13 +195,12 @@ def aorib():
     # linie in matricea rezultat; in loc de -10 ar tb sa fie -n_a
     for linie in range(-1, -n_a - 1, -1):
 
-        print(linie)
         # element in matricea rezultat
         for coloana in range(-1, -n_a - 1, -1):
             elem_sum = 0
 
             # linie din matricea A memorata economic
-            print("a", val_a[col_a.index(linie) + 1:col_a.index(linie - 1)])
+            # print("a", val_a[col_a.index(linie) + 1:col_a.index(linie - 1)])
             for index_a, elem_a in zip(col_a[col_a.index(linie) + 1:col_a.index(linie - 1)],
                                        val_a[col_a.index(linie) + 1:col_a.index(linie - 1)]):
 
@@ -199,25 +208,25 @@ def aorib():
                     # unele elemente trebuie inmultite cu elemente de pe diaginala
                     if index_a == -coloana and index_a != -linie:
                         elem_sum += elem_a * d_b_t[-coloana - 1]
-                        print("elem_a * diag")
-                        print("elem[", -linie - 1, -coloana - 1, "]+=", elem_a, "*", d_b_t[-coloana - 1], "=", elem_sum)
+                        # print("elem_a * diag")
+                        # print("elem[", -linie - 1, -coloana - 1, "]+=", elem_a, "*", d_b_t[-coloana - 1], "=", elem_sum)
                     else:
                         # pentru celelaltele, cautam elementul din linia lui B transpus de pe aceeasi coloana
-                        print("b", val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)])
+                        # print("b", val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)])
                         for index_b, elem_b in zip(col_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)],
                                                    val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)]):
                             if index_a == index_b:
                                 elem_sum += elem_b * elem_a
-                                print("elem_a * elem_b")
-                                print("elem[", -linie - 1, -coloana - 1, "]+=", elem_a, "*", elem_b, "=", elem_sum)
+                                # print("elem_a * elem_b")
+                                # print("elem[", -linie - 1, -coloana - 1, "]+=", elem_a, "*", elem_b, "=", elem_sum)
                 except Exception as e:
                     pass
             for index_b, elem_b in zip(col_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)],
                                        val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)]):
                 if index_b == -linie and index_b != -coloana:
                     elem_sum += elem_b * d_b_t[-linie - 1]
-                    print("elem_b * diag")
-                    print("elem[", -linie - 1, -coloana - 1, "]+=", elem_b, "*", d_b_t[-linie - 1], "=", elem_sum)
+                    # print("elem_b * diag")
+                    # print("elem[", -linie - 1, -coloana - 1, "]+=", elem_b, "*", d_b_t[-linie - 1], "=", elem_sum)
             # acest if functioneaza, diagonala e calculata corect
             if linie == coloana:
                 elem_sum += d_a[-linie - 1] * d_b_t[-coloana - 1]
@@ -226,13 +235,12 @@ def aorib():
                     identical = False
             else:
                 if elem_sum > epsilon:
+                    if elem_sum not in val_aorib[col_aorib.index(linie) + 1:col_aorib.index(linie - 1)]:
+                        identical = False
                     col.insert(col.index(linie) + 1, -coloana)
                     val.insert(col.index(linie) + 1, elem_sum)
-    # cand le afisez, nu au elemente comune de la -1 pana la -2
-    print(val)
-    print(val_aorib)
-    # print(col)
-    # print(col_aorib)
+
+    print("\tCalculul pt A*B este corect:", identical)
 
 
 # decomenteaza pt a calcula
@@ -249,3 +257,6 @@ def aorib():
 # aorix(d_b, val_b, col_b, b_b, "B")
 
 aorib()
+
+# verify_10_elem(col_a, n_a)
+# verify_10_elem(col_b, n_b)
