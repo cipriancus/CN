@@ -243,20 +243,17 @@ def aorib():
     print("\tCalculul pt A*B este corect:", identical)
 
 
-# decomenteaza pt a calcula
-# o fi ea memorare economica de spatiu, dar nu e economica de timp
 
 # memorare_economica("a.txt")
 # memorare_economica("b.txt")
 # memorare_economica("aorib.txt")
 # memorare_economica("aplusb.txt")
 # memorare_economica_transpus("bn.txt")
+a_plus_b()
+#aorix(d_a, val_a, col_a, b_a, "A")
+# orix(d_b, val_b, col_b, b_b, "B")
 
-# a_plus_b()
-# aorix(d_a, val_a, col_a, b_a, "A")
-# aorix(d_b, val_b, col_b, b_b, "B")
-
-aorib()
+#aorib()
 
 # verify_10_elem(col_a, n_a)
 # verify_10_elem(col_b, n_b)
