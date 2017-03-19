@@ -1,7 +1,9 @@
 import copy
+import time
 
 epsilon = 10 ** -8
 
+start=time.time()
 
 def search(ai, aicol, j):
     try:
@@ -9,6 +11,12 @@ def search(ai, aicol, j):
     except:
         return 0
 
+def create_dictionary(val,col,n):
+    positions=dict()
+    for iterator in range(0,len(col)):
+        if int(col[iterator])<0:
+            positions[int(col[iterator])]=int(iterator)
+    return positions
 
 def memorare_economica(nume_fis):
     print("Se memoreaza valorile din fisierul", nume_fis, ".")
@@ -89,37 +97,13 @@ dx = 0
 
 xkcopy = copy.deepcopy(xk)
 
+positions=create_dictionary(val,col,n)
+
 # calc noul xk, cu i de la 0,n-1
-for iterator in range(0, n):
-    ai = val[col.index(-iterator - 1) + 1:col.index(-iterator - 2)]  # iau linia ai ca sa o folosesc peste tot
-    aicol = col[col.index(-iterator - 1) + 1:col.index(-iterator - 2)]  # iau si coloanna ca sa stiu unde sunt
-
-    q = 0  # suma de la j=1 la i-1 aij xj k+1
-    p = 0  # suma de la i+1 la n din aij xj k
-
-    for coloana in aicol:
-        if coloana >= 1 and coloana <= iterator:
-            q = q + search(ai, aicol, int(coloana)) * xk[int(coloana)]  # xj
-        elif coloana >= iterator + 1 and coloana < n:
-            p = p + search(ai, aicol, int(coloana)) * xkcopy[int(coloana)]
-
-    xk[iterator] = (b[iterator] - q - p) / d[iterator]
-
-# dx=||xk-xcopy||
-dx = float(0)
-for iterator in range(0, n):
-    dx = dx + abs(xk[iterator] - xkcopy[iterator])
-print(xk[0])
-k = k + 1
-
-
-while dx >= epsilon and k <= kmax and dx <= pow(10, 8):
-    xkcopy = copy.deepcopy(xk)
-
-    # calc noul xk, cu i de la 0,n-1
-    for iterator in range(0, n):
-        ai = val[col.index(-iterator - 1) + 1:col.index(-iterator - 2)]  # iau linia ai ca sa o folosesc peste tot
-        aicol = col[col.index(-iterator - 1) + 1:col.index(-iterator - 2)]  # iau si coloanna ca sa stiu unde sunt
+for iterator in range(0,n):
+    try:
+        ai = val[positions[-iterator - 1] + 1:positions[-iterator - 2]]  # iau linia ai ca sa o folosesc peste tot
+        aicol = col[positions[-iterator - 1]  + 1:positions[-iterator - 2]]  # iau si coloanna ca sa stiu unde sunt
 
         q = 0  # suma de la j=1 la i-1 aij xj k+1
         p = 0  # suma de la i+1 la n din aij xj k
@@ -129,8 +113,40 @@ while dx >= epsilon and k <= kmax and dx <= pow(10, 8):
                 q = q + search(ai, aicol, int(coloana)) * xk[int(coloana)]  # xj
             elif coloana >= iterator + 1 and coloana < n:
                 p = p + search(ai, aicol, int(coloana)) * xkcopy[int(coloana)]
-
         xk[iterator] = (b[iterator] - q - p) / d[iterator]
+    except Exception as e:
+        print(e)
+        pass
+
+# dx=||xk-xcopy||
+dx = float(0)
+for iterator in range(0, n):
+    dx = dx + abs(xk[iterator] - xkcopy[iterator])
+print(xk[0])
+k = k + 1
+
+while dx >= epsilon and k <= kmax and dx <= pow(10, 8):
+    xkcopy = copy.deepcopy(xk)
+
+    # calc noul xk, cu i de la 0,n-1
+    for iterator in range(0, n):
+        try:
+            ai = val[positions[-iterator - 1] + 1:positions[-iterator - 2]]  # iau linia ai ca sa o folosesc peste tot
+            aicol = col[positions[-iterator - 1] + 1:positions[-iterator - 2]]  # iau si coloanna ca sa stiu unde sunt
+
+            q = 0  # suma de la j=1 la i-1 aij xj k+1
+            p = 0  # suma de la i+1 la n din aij xj k
+
+            for coloana in aicol:
+                if coloana >= 1 and coloana <= iterator:
+                    q = q + search(ai, aicol, int(coloana)) * xk[int(coloana)]  # xj
+                elif coloana >= iterator + 1 and coloana < n:
+                    p = p + search(ai, aicol, int(coloana)) * xkcopy[int(coloana)]
+
+            xk[iterator] = (b[iterator] - q - p) / d[iterator]
+        except Exception as e:
+            print(e)
+            pass
 
     # dx=||xk-xcopy||
     dx = float(0)
@@ -139,23 +155,5 @@ while dx >= epsilon and k <= kmax and dx <= pow(10, 8):
     print(xk[0])
     k = k + 1
 
-
-def aorix(d, val, col, b, name):
-    print("\nSe calculeaza " + name + "*x si se verifica daca rezultatul\neste identic cu cel din fisier:")
-    iterator = -1
-    b_aux = list()
-    identical = True
-    while -iterator < n:
-        elem_b = d[-iterator - 1] * xk[-iterator - 1]
-        for index, elem in zip(col[col.index(iterator) + 1:col.index(iterator - 1)],
-                               val[col.index(iterator) + 1:col.index(iterator - 1)]):
-            elem_b += elem * xk[int(index) - 1]
-        b_aux.append(elem_b)
-        if abs(b[-iterator - 1] - b_aux[-iterator - 1]) > epsilon:
-            identical = False
-            print(b[-iterator - 1], b_aux[-iterator - 1], -iterator - 1)
-        iterator -= 1
-    print("\tCalculul pt " + name + "*x este corect:", identical)
-    return b_aux
-
-aorix(d,val,col,b,"A")
+end=time.time()
+print(end-start)
