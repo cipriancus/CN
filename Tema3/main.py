@@ -5,11 +5,13 @@ epsilon = 10 ** -15
 
 # de verificat ca o linie nu are mai mult de 10 elemente
 def memorare_economica(nume_fis):
+    vaux = dict()
+    caux = dict()
     print("Se memoreaza valorile din fisierul", nume_fis, ".")
     n = int(open(nume_fis).readline())
-    d = [0.0 for i in range(n + 1)]
-    val = [0.0 for i in range(n + 1)]
-    col = [-i - 1 for i in range(n + 1)]
+    d = [0 for i in range(n + 1)]
+    val = list()
+    col = list()
     b = list()
     ok = 0
     for line in open(nume_fis):
@@ -18,14 +20,28 @@ def memorare_economica(nume_fis):
             if float(x) == float(y):
                 d[int(x)] = float(elem)
             else:
-                col.insert(col.index(-int(x) - 1) + 1, float(y) + 1)
-                val.insert(col.index(-int(x) - 1) + 1, float(elem))
+                if -int(x) - 1 in vaux:
+                    caux[-int(x) - 1].append(float(y) + 1)
+                    vaux[-int(x) - 1].append(float(elem))
+                else:
+                    vaux[-int(x) - 1] = list()
+                    caux[-int(x) - 1] = list()
+                    caux[-int(x) - 1].append(float(y) + 1)
+                    vaux[-int(x) - 1].append(float(elem))
 
         else:
             aux = line.strip("\n")
             if len(aux) > 1 and ok == 1:
                 b.append(float(aux))
             ok = 1
+    for i in range(-1, -n_a - 1, -1):
+        val += [0]
+        col += [i]
+        if i in vaux:
+            val += vaux[i]
+            col += caux[i]
+    val += [0]
+    col += [-n_a - 1]
     open("output_" + nume_fis, "wt").write(str(n) + "\n")
     open("output_" + nume_fis, "a").write(str(d) + "\n")
     open("output_" + nume_fis, "a").write(str(val) + "\n")
@@ -74,8 +90,8 @@ x = [n_a - i + 1 for i in range(1, n_a + 1)]
 def a_plus_b():
     print("\nSe calculeaza A+B si se verifica daca rezultatul\neste identic cu cel din fisier:")
     identical = True
-    d = [0.0 for i in range(n_a + 1)]
-    val = [0.0 for i in range(n_a + 1)]
+    d = [0 for i in range(n_a + 1)]
+    val = [0 for i in range(n_a + 1)]
     col = [-i - 1 for i in range(n_a + 1)]
     for elem_a, elem_b, elem_aplusb in zip(d_a, d_b, d_aplusb):
         d.append(elem_a + elem_b)
@@ -109,14 +125,14 @@ def a_plus_b():
     return d, val, col
 
 
-def verify_10_elem(col, n):
+def verify_nr_elem(col, n, max):
     iterator = -1
     while -iterator < n:
-        if len(col[col.index(iterator) + 1:col.index(iterator - 1)]) > 10:
-            print("S-au gasit mai mult de 10 elem pe linie.")
+        if len(col[col.index(iterator) + 1:col.index(iterator - 1)]) > max:
+            print("S-au gasit mai mult de ", max, " elem pe linie.")
             return
         iterator -= 1
-    print("Toate liniile au mai putin de 10 elemente.")
+    print("Toate liniile au mai putin de ", max, " elemente.")
 
 
 def aorix(d, val, col, b, name):
@@ -141,8 +157,8 @@ def aorix(d, val, col, b, name):
 def memorare_economica_transpus(nume_fis):
     print("Se memoreaza valorile din fisierul", nume_fis, ".")
     n = int(open(nume_fis).readline())
-    d = [0.0 for i in range(n)]
-    val = [0.0 for i in range(n + 1)]
+    d = [0 for i in range(n)]
+    val = [0 for i in range(n + 1)]
     col = [-i - 1 for i in range(n + 1)]
     b = list()
     ok = 0
@@ -160,9 +176,6 @@ def memorare_economica_transpus(nume_fis):
             if len(aux) > 1 and ok == 1:
                 b.append(float(aux))
             ok = 1
-    print(d)
-    print(val)
-    print(col)
     open("output_transpus_" + nume_fis, "wt").write(str(n) + "\n")
     open("output_transpus_" + nume_fis, "a").write(str(d) + "\n")
     open("output_transpus_" + nume_fis, "a").write(str(val) + "\n")
@@ -170,90 +183,76 @@ def memorare_economica_transpus(nume_fis):
     open("output_transpus_" + nume_fis, "a").write(str(b) + "\n")
 
 
-n_a = 5
-d_a = [5.0, 4.0, 7.0, 9.0, 12.0]
-val_a = [0.0, 2.0, 0.0, 3.0, 1.0, 6.0, 0.0, 0.0, 8.0, 0.0, 10.0, 11.0, 0.0]
-col_a = [-1, 3.0, -2, 1.0, 3.0, 5.0, -3, -4, 2.0, -5, 1.0, 4.0, -6]
-n_b_t = 5
-d_b_t = [5.0, 4.0, 7.0, 9.0, 12.0]
-val_b_t = [0.0, 10.0, 3.0, 0.0, 8.0, 0.0, 2.0, 1.0, 0.0, 11.0, 0.0, 6.0, 0.0]
-col_b_t = [-1, 5.0, 2.0, -2, 4.0, -3, 1.0, 2.0, -4, 5.0, -5, 2.0, -6]
-n_aorib = 5
-d_aorib = [25, 16, 49, 81, 144]
-val_aorib = [0.0, 24, 0.0, 87, 17, 66, 96, 0.0, 0.0, 24, 104, 8, 48, 0.0, 170, 88, 20, 231, 0.0]
-col_aorib = [-1, 3, -2, 1, 3, 4, 5, -3, -4, 1, 2, 3, 5, -5, 1, 2, 3, 4, -6]
+result = dict()
+
+
+def add(i, j, elem):
+    i = str(i + 1)
+    j = str(j + 1)
+    if i + "," + j in result:
+        result[i + "," + j] += elem
+    else:
+        result[str(i) + "," + str(j)] = elem
+
+
+def dict_to_matrix():
+    for index, elem in zip(col_aorib, val_aorib):
+        index = int(index)
+        if index < 0:
+            line = -index
+        else:
+            if result[str(line) + "," + str(index)] != elem:
+                return False
+    return True
 
 
 def aorib():
     print("\nSe calculeaza A*B si se verifica daca rezultatul\neste identic cu cel din fisier:")
-    identical = True
+    for index_a, elem_a in zip(col_a, val_a):
+        if index_a < 0:
+            line_a = int(-index_a - 1)
+            if line_a < n_a:
+                add(line_a, line_a, d_b_t[line_a] * d_a[line_a])
+        else:
+            for index_b, elem_b in zip(col_b_t, val_b_t):
+                if index_b < 0:
+                    line_b = int(-index_b - 1)
+                    if index_a == line_b + 1:
+                        add(line_a, line_b, elem_a * d_b_t[line_b])
+                else:
+                    if index_b == index_a:
+                        add(line_a, line_b, elem_a * elem_b)
 
-    d = list()
-    val = [0.0 for i in range(n_a + 1)]
-    col = [-i - 1 for i in range(n_a + 1)]
-
-    # linie in matricea rezultat; in loc de -10 ar tb sa fie -n_a
-    for linie in range(-1, -n_a - 1, -1):
-
-        # element in matricea rezultat
-        for coloana in range(-1, -n_a - 1, -1):
-            elem_sum = 0
-
-            # linie din matricea A memorata economic
-            # print("a", val_a[col_a.index(linie) + 1:col_a.index(linie - 1)])
-            for index_a, elem_a in zip(col_a[col_a.index(linie) + 1:col_a.index(linie - 1)],
-                                       val_a[col_a.index(linie) + 1:col_a.index(linie - 1)]):
-
-                try:
-                    # unele elemente trebuie inmultite cu elemente de pe diaginala
-                    if index_a == -coloana and index_a != -linie:
-                        elem_sum += elem_a * d_b_t[-coloana - 1]
-                        # print("elem_a * diag")
-                        # print("elem[", -linie - 1, -coloana - 1, "]+=", elem_a, "*", d_b_t[-coloana - 1], "=", elem_sum)
-                    else:
-                        # pentru celelaltele, cautam elementul din linia lui B transpus de pe aceeasi coloana
-                        # print("b", val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)])
-                        for index_b, elem_b in zip(col_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)],
-                                                   val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)]):
-                            if index_a == index_b:
-                                elem_sum += elem_b * elem_a
-                                # print("elem_a * elem_b")
-                                # print("elem[", -linie - 1, -coloana - 1, "]+=", elem_a, "*", elem_b, "=", elem_sum)
-                except Exception as e:
-                    pass
-            for index_b, elem_b in zip(col_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)],
-                                       val_b_t[col_b_t.index(coloana) + 1:col_b_t.index(coloana - 1)]):
-                if index_b == -linie and index_b != -coloana:
-                    elem_sum += elem_b * d_b_t[-linie - 1]
-                    # print("elem_b * diag")
-                    # print("elem[", -linie - 1, -coloana - 1, "]+=", elem_b, "*", d_b_t[-linie - 1], "=", elem_sum)
-            # acest if functioneaza, diagonala e calculata corect
-            if linie == coloana:
-                elem_sum += d_a[-linie - 1] * d_b_t[-coloana - 1]
-                d.append(elem_sum)
-                if abs(d[-linie - 1] - d_aorib[-linie - 1]) > epsilon:
-                    identical = False
-            else:
-                if elem_sum > epsilon:
-                    if elem_sum not in val_aorib[col_aorib.index(linie) + 1:col_aorib.index(linie - 1)]:
-                        identical = False
-                    col.insert(col.index(linie) + 1, -coloana)
-                    val.insert(col.index(linie) + 1, elem_sum)
-
-    print("\tCalculul pt A*B este corect:", identical)
+    for index_b, elem_b in zip(col_b_t, val_b_t):
+        if index_b < 0:
+            line_b = int(-index_b - 1)
+        for line_a in range(n_a):
+            if index_b == line_a + 1:
+                add(line_a, line_b, elem_b * d_a[line_a])
+    print("\nSe calculeaza A*Bx si se verifica daca rezultatul\neste identic cu cel din fisier:")
+    print("\tCalculul pt A*B este corect:", dict_to_matrix())
 
 
+import time
 
-# memorare_economica("a.txt")
-# memorare_economica("b.txt")
-# memorare_economica("aorib.txt")
-# memorare_economica("aplusb.txt")
-# memorare_economica_transpus("bn.txt")
+t = time.time()
+
+memorare_economica("a.txt")
+memorare_economica("b.txt")
+memorare_economica("aorib.txt")
+memorare_economica("aplusb.txt")
+memorare_economica_transpus("b.txt")
+
+print("\nPentru matricea A:")
+verify_nr_elem(col_a, n_a, 10)
+print("Pentru matricea B:")
+verify_nr_elem(col_b, n_b, 10)
+print("Pentru matricea A+B:")
+verify_nr_elem(col_aplusb, n_aplusb, 20)
+
 a_plus_b()
-#aorix(d_a, val_a, col_a, b_a, "A")
-# orix(d_b, val_b, col_b, b_b, "B")
+aorix(d_a, val_a, col_a, b_a, "A")
+aorix(d_b, val_b, col_b, b_b, "B")
+aorib()
 
-#aorib()
-
-# verify_10_elem(col_a, n_a)
-# verify_10_elem(col_b, n_b)
+print("\nTimp totoal: ",int(time.time() - t), "secunde.")
