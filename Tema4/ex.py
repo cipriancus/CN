@@ -57,7 +57,7 @@ def memorare_economica(nume_fis):
 # memorare_economica("m_rar_2017_3.txt")
 # memorare_economica("m_rar_2017_4.txt")
 
-fisier = "output_m_rar_2017_1.txt"
+fisier = "output_m_rar_2017_4.txt"
 
 f = open(fisier)
 n = int(f.readline())
@@ -69,25 +69,26 @@ b = [float(e) for e in f.readline().strip("[").strip("]\n").split(", ")]
 # era un mic bug, baga 0.0 la final
 if len(d) > n:
     d.pop()
+positions=create_dictionary(val,col,n)
 
-# verificam asigurarea convergentei
-# convergenta=True
-# for iterator in range(0,n):
-#     element=abs(d[iterator])#elementul |aii|
-#
-#     #selectam linia i
-#     linie=val[col.index(-iterator-1) + 1:col.index(-iterator - 2)]
-#     sum=0
-#     for iterator2 in linie:
-#         sum=sum+abs(iterator2)
-#
-#     if element < sum:
-#         convergenta=False
-#         print("Convergenta nu este asigurata")
-#         break
-#
-# if convergenta == True:
-#     print("Matricea este convergenta")
+#verificam asigurarea convergentei
+convergenta=True
+for iterator in range(0,n):
+    element=abs(d[iterator])#elementul |aii|
+
+    #selectam linia i
+    linie=val[positions[-iterator-1] + 1:positions[-iterator - 2]]
+    sum=0
+    for iterator2 in linie:
+        sum=sum+abs(iterator2)
+
+    if element < sum:
+        convergenta=False
+        print("Convergenta nu este asigurata")
+        break
+
+if convergenta == True:
+    print("Matricea este convergenta")
 
 
 kmax = 10000
@@ -97,7 +98,6 @@ dx = 0
 
 xkcopy = copy.deepcopy(xk)
 
-positions=create_dictionary(val,col,n)
 
 # calc noul xk, cu i de la 0,n-1
 for iterator in range(0,n):
@@ -152,8 +152,12 @@ while dx >= epsilon and k <= kmax and dx <= pow(10, 8):
     dx = float(0)
     for iterator in range(0, n):
         dx = dx + abs(xk[iterator] - xkcopy[iterator])
-    print(xk[0])
+    print(xk[0:3])
     k = k + 1
 
+
 end=time.time()
-print(end-start)
+print("Timpul de calcul este "+str(end-start))
+
+print("Numarul de iteratii este "+str(k))
+
